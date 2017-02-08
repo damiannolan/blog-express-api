@@ -78,6 +78,19 @@ router.route('/entries')
         });
     });
 
+router.route('/entries/:entry_id')
+
+    .delete(function(req, res) {
+        Entry.remove({
+            _id: req.params.entry_id
+        }, function(err, entry) {
+            if(err)
+                res.send(err);
+
+            res.json({ message: 'Successfully deleted' });
+        });
+    });
+
 // Register Routes - prefix with /api
 app.use('/api', router);
 
