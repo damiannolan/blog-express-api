@@ -46,7 +46,7 @@ router.get('/', function(req, res) {
 
 router.route('/entries')
 	
-	//POST
+	// POST
     // Create an entry (accessed at POST http://localhost:8080/api/entries)
     .post(function(req, res) {
 
@@ -67,7 +67,7 @@ router.route('/entries')
         
     })
 
-    //GET
+    // GET
     // Get all the entries (accessed at GET http://localhost:8080/api/entries)
     .get(function(req, res) {
         Entry.find(function(err, entries) {
@@ -79,7 +79,38 @@ router.route('/entries')
     });
 
 router.route('/entries/:entry_id')
+    
+    // GET
+    .get(function(req, res) {
+        Entry.findById(req.params.entry_id, function(err, entry) {
+            if (err)
+                res.send(err);
+            res.json(entry);
+        });
+    })
 
+    // PUT
+    .put(function(req, res) {
+        Entry.findById(req.params.entry_id, function(err, entry) {
+            if (err)
+                res.send(err);
+
+            // update
+            entry.title = req.body.title;
+            entry.body = req.body.body;
+            entry.time = req.body.time;
+
+            // save
+            entry.save(function(err) {
+                if (err)
+                    res.send(err);
+
+                res.json({ message: 'Entry updated!' });
+            });
+        });
+    })
+
+    // DELETE
     .delete(function(req, res) {
         Entry.remove({
             _id: req.params.entry_id
